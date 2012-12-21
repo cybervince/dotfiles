@@ -1,4 +1,0 @@
-archlinux
-=========
-
-Archlinux config files
