@@ -258,7 +258,7 @@ globalkeys = awful.util.table.join(
               end),
 
     -- Custom commands
-    awful.key({ modkey, 	  }, "z", function () awful.util.spawn("urxvt -e ncxmms2 -n") end)
+    awful.key({ modkey, 	  }, "z", function () awful.util.spawn(terminal .. " -e " .. musicplayer) end)
 
 )
 
