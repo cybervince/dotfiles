@@ -43,6 +43,9 @@ editor_cmd = terminal .. " -e " .. editor
 
 -- Defaults commands
 musicplayer = "ncxmms2 -n"
+volup = "pavolctl up"
+voldown = "pavolctl down"
+volmute = "pavolctl mute"
 
 
 -- Default modkey.
@@ -258,7 +261,11 @@ globalkeys = awful.util.table.join(
               end),
 
     -- Custom commands
-    awful.key({ modkey, 	  }, "z", function () awful.util.spawn(terminal .. " -e " .. musicplayer) end)
+    awful.key({ modkey, 	  }, "z", function () awful.util.spawn(terminal .. " -e " .. musicplayer) end),
+    awful.key({ modkey, 	  }, "KP_Add", function () awful.util.spawn(volup) end),
+    awful.key({ modkey, 	  }, "KP_Subtract", function () awful.util.spawn(voldown) end),
+    awful.key({ modkey, 	  }, "KP_Multiply", function () awful.util.spawn(volmute) end),
+    awful.key({ modkey, 	  }, "KP_Divide", function () awful.util.spawn("pavucontrol") end)
 
 )
 
