@@ -47,6 +47,11 @@ case $1 in
        ;;
 
 
+  awesome)
+	exec dbus-launch awesome
+	;;
+
+
   *)  
 	exec dbus-launch $DEFAULT_SESSION
 	;;
