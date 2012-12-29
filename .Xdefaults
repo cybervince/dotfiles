@@ -13,7 +13,7 @@ URxvt*cursorColor: #00F3FF
 URxvt*scrollBar: false
 URxvt*saveLines: 1000
 URxvt*perl-ext-common: default,matcher,tabbed
-URxvt*urlLauncher: jumanji
+URxvt*urlLauncher: firefox
 URxvt*colorUL: #3465A4
 URxvt*matcher.button: 1
 URxvt*tabbed.tabbar-fg: 10
