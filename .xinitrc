@@ -22,6 +22,11 @@ case $1 in
 	;;
 
 
+  kde)
+	exec dbus-launch startkde
+	;;
+
+
   dwm)
 	# enable restart X
 	setxkbmap -option terminate:ctrl_alt_bksp &
@@ -49,6 +54,7 @@ case $1 in
 
 
   awesome)
+	xcompmgr &
 	exec dbus-launch awesome
 	;;
 
