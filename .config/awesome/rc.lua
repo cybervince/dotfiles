@@ -6,8 +6,6 @@ require("awful.rules")
 require("beautiful")
 -- Notification library
 require("naughty")
-require("applicationsmenu")
-
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -35,23 +33,19 @@ end
 -- }}}
 
 -- {{{ Variable definitions
-os.setlocale("fr_FR.UTF-8")
-
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/home/vincent/.config/awesome/theme.lua")
+beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
--- Defaults apps
+-- Defaults commands
 musicplayer = "ncxmms2 -n"
 volup = "pavolctl up"
 voldown = "pavolctl down"
 volmute = "pavolctl mute"
-explorer = "caja --no-desktop"
-browser = "firefox"
 
 
 -- Default modkey.
@@ -101,7 +95,6 @@ mymainmenu = awful.menu({ items = {
 					{ "Firefox", "firefox" },
 					{ "Musique", terminal .. " -e " .. musicplayer },
 					{ "Terminal", terminal },
-					{"accessories", applicationsmenu.applicationsmenu(), beautiful.awesome_icon},
 					{ "awesome", myawesomemenu, beautiful.awesome_icon }
                                   }
                         })
@@ -112,7 +105,7 @@ mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
 
 -- {{{ Wibox
 -- Create a textclock widget
-mytextclock = awful.widget.textclock({ align = "right" }, "%A %e %B | %R " )
+mytextclock = awful.widget.textclock({ align = "right" })
 
 -- Create a systray
 mysystray = widget({ type = "systray" })
@@ -224,7 +217,7 @@ globalkeys = awful.util.table.join(
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ 	          }, "Menu", function () mymainmenu:show({keygrabber=true}) end),
+    awful.key({ modkey,           }, "w", function () mymainmenu:show({keygrabber=true}) end),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "Right", function () awful.client.swap.byidx(  1)    end),
@@ -269,8 +262,6 @@ globalkeys = awful.util.table.join(
 
     -- Custom commands
     awful.key({ modkey, 	  }, "z", function () awful.util.spawn(terminal .. " -e " .. musicplayer) end),
-    awful.key({ modkey, 	  }, "e", function () awful.util.spawn(explorer) end),
-    awful.key({ modkey, 	  }, "w", function () awful.util.spawn(browser) end),
     awful.key({ modkey, 	  }, "KP_Add", function () awful.util.spawn(volup) end),
     awful.key({ modkey, 	  }, "KP_Subtract", function () awful.util.spawn(voldown) end),
     awful.key({ modkey, 	  }, "KP_Multiply", function () awful.util.spawn(volmute) end),
@@ -398,6 +389,3 @@ end)
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
-
--- Autostart programs
---awful.util.spawn("my_prog")
