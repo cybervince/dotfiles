@@ -1,0 +1,88 @@
+####
+### starting from scratch
+#  Conky config file .2conkyrc
+#  by Grae
+##
+
+####
+## begin setup config
+#  general startup settings
+
+background yes
+update_interval 2.0
+text_buffer_size 1024
+total_run_times 0
+
+## screen setup:
+#  placement, sizing, font and color info
+
+alignment bottom_left
+gap_x 130
+gap_y 15
+minimum_size 220 0
+maximum_width 1850
+own_window yes
+own_window_hints below,skip_pager,skip_taskbar,undecorated,sticky
+# transparency:
+own_window_argb_visual yes
+own_window_argb_value 0
+# font defaults:
+use_xft yes
+xftfont DroidSans:size=8
+xftalpha 0.9
+override_utf8_locale yes
+
+## NOTE: Other fonts can be called up during the TEXT formatting
+#  these fonts are found through the normal path, or ~/.fonts
+#  OpenLogos
+
+## images, buffering, shading
+imlib_cache_size 60
+double_buffer yes
+draw_shades yes
+default_shade_color 777777
+
+## misc text formatting
+short_units yes
+pad_percents 0
+border_inner_margin 0
+uppercase no
+use_spacer right
+
+## outlines and borders
+draw_outline no
+draw_borders no
+draw_graph_borders no
+border_width 0
+
+## stdout/console printing
+out_to_ncurses no
+out_to_console no
+
+## process settings
+top_name_width 5
+#no_buffers yes
+
+#### end config
+
+#### Begin display information
+## everything below 'TEXT' is drawn on screen
+
+TEXT
+${color white}UpTime: ${color black}$uptime \
+${color white}Kern: ${color black}$kernel \
+${color white}Load: ${color black}$loadavg \
+${color white}Processes: ${color black}$processes \
+${color white}Running: ${color black}$running_processes \
+${color white}Highest CPU: \
+${color black}${top name 1}${top_mem cpu 1} ${color black} \
+${color white}Highest MEM: \
+${color black}${top_mem name 1}${top_mem mem 1} ${color black} \
+${color white}MEM: ${color black} $memperc% $mem/$memmax \
+${color white}SWAP: ${color black}$swapperc% $swap/$swapmax \
+${color white}ROOT: ${color black}${fs_free /}/${fs_size /} \
+${color white}HOME: ${color black}${fs_free /home}/${fs_size /home} \
+${color white}NAS: ${color black}${fs_free /media/NAS}/${fs_size /media/NAS} \
+${color white}NET: \
+${color white}Up: ${color black}${upspeed eth0} k/s \
+${color white}Down: ${color black}${downspeed eth0}k/s${color}
