@@ -1,0 +1,54 @@
+! Apparence générale
+URxvt*geometry: 74x27
+URxvt*saveLines: 10000
+URxvt.font: xft:DejaVu Sans Mono:size=10
+URxvt.boldFont: xft:DejaVu Sans Mono:size=10
+URxvt*scrollBar: false
+
+! Extensions Perl
+URxvt.perl-ext-common:      default,clipboard,matcher
+
+! Options diverses
+URxvt*loginShell: true
+
+! Gestion des URL
+URxvt.perl-ext-common:  default,matcher
+URxvt.url-launcher:      /usr/bin/firefox -new-tab
+URxvt.matcher.button:   1
+
+! Paramétrage du scrolling
+URxvt.scrollTtyOutput:false
+URxvt.scrollTtyKeypress:true
+URxvt.scrollWithBuffer:true 
+
+! Couleurs (c'est la palette Tango)
+URxvt*foreground: #f2f2f2
+URxvt*background: #101010
+URxvt*color0: #101010
+URxvt*color1: #f13a21
+URxvt*color2: #93f91d
+URxvt*color3: #ffd00a
+URxvt*color4: #004f9e
+URxvt*color5: #ec0048
+URxvt*color6: #2aa7e7
+URxvt*color7: #f2f2f2
+URxvt*color8: #1d202f
+URxvt*color9: #ff361e
+URxvt*color10: #ffc005
+URxvt*color11: #93ff00
+URxvt*color12: #0071ff
+URxvt*color13: #ef0051
+URxvt*color14: #4bb8fd
+URxvt*color15: #a020f0
+
+! Utilisation de la vraie transparence
+urxvt*depth: 32
+urxvt*background: rgba:0000/0000/0000/dddd
+
+! Switching screen-windows
+urxvt*keysym.C-Tab: 33[27;5;9~
+urxvt*keysym.C-S-Tab: 33[27;6;9~
+
+!*vt100.translations: #override
+!        Ctrl ~Shift <Key>Tab: string(0x1b) string("[27;5;9~")
+!        Ctrl Shift <Key>Tab: string(0x1b) string("[27;6;9~")
