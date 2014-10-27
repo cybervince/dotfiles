@@ -1,5 +1,5 @@
 ! Apparence générale
-URxvt*geometry: 74x27
+URxvt*geometry: 100x30
 URxvt*saveLines: 10000
 !URxvt.font: xft:DejaVu Sans Mono:size=10
 URxvt.font: xft:DejaVu Sans Mono For Powerline:size=10
