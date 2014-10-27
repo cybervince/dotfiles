@@ -85,4 +85,4 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 # Applis par défaut
-EDITOR=vim
+export EDITOR=vim
