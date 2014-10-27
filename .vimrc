@@ -88,6 +88,8 @@ imap <pagedown> <esc><pagedown>:call CondRight()<CR>
 " vim powerline "
 """""""""""""""""
 set laststatus=2
+let g:airline_powerline_fonts = 1
+set t_Co=256
 "let g:Powerline_symbols = 'fancy'
 
 " gvim only "

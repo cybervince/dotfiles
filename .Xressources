@@ -1,8 +1,10 @@
 ! Apparence générale
 URxvt*geometry: 74x27
 URxvt*saveLines: 10000
-URxvt.font: xft:DejaVu Sans Mono:size=10
-URxvt.boldFont: xft:DejaVu Sans Mono:size=10
+!URxvt.font: xft:DejaVu Sans Mono:size=10
+URxvt.font: xft:DejaVu Sans Mono For Powerline:size=10
+!URxvt.boldFont: xft:DejaVu Sans Mono:size=10
+URxvt.boldFont: xft:DejaVu Sans Mono For Powerline:size=10
 URxvt*scrollBar: false
 
 ! Extensions Perl
