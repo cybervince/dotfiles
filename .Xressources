@@ -12,7 +12,6 @@ URxvt.perl-ext-common:      default,clipboard,matcher
 URxvt*loginShell: true
 
 ! Gestion des URL
-URxvt.perl-ext-common:  default,matcher
 URxvt.url-launcher:      /usr/bin/firefox -new-tab
 URxvt.matcher.button:   1
 
@@ -21,7 +20,7 @@ URxvt.scrollTtyOutput:false
 URxvt.scrollTtyKeypress:true
 URxvt.scrollWithBuffer:true 
 
-! Couleurs (c'est la palette Tango)
+! Couleurs (c est la palette Tango)
 URxvt*foreground: #f2f2f2
 URxvt*background: #101010
 URxvt*color0: #101010
