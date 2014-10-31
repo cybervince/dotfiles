@@ -15,6 +15,11 @@ DEFAULT_SESSION=mate-session
 
 export PATH=$PATH:~/.local/bin
 
+
+# enable restart X
+setxkbmap -option terminate:ctrl_alt_bksp &
+
+
 case $1 in
 
   mate)
