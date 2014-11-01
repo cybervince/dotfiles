@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+cache_dir="/var/cache/pacman/pkg"
+
+while getopts "hd:" opt; do
+    case "$opt" in
+        d)
+            cache_dir="$OPTARG"
+            ;;
+
+        \?|h)
+            cat << EOF
+usage: $(basename "$0") [-h] [-d dir] file
+
+    -h display this help
+
+restores original file (absolute path) from package in package cache in dir.
+dir defaults to $cache_dir
+EOF
+
+            [[ "$opt" == "h" ]] && exit 0
+            exit 5
+            ;;
+    esac
+done
+
+echo $cache_dir
+shift "$((OPTIND-1))"
+
+case "$1" in
+    /*)
+        pacman -Qo "$1" >/dev/null || exit 1
+        tar --extract --to-stdout --file "$cache_dir/$(pacman -Q $(pacman -Qqo "$1") | sed 's/ /-/g')-$(uname --machine).pkg.tar.xz" "${1/\//}" > "$1.sample" || exit 2
+        chmod a-w "$1.sample" || exit 3
+        ;;
+    *)
+        echo "Use an abolute path." >&2 && exit 4
+        ;;
+esac
