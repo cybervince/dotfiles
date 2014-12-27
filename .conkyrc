@@ -82,7 +82,7 @@ ${color white}MEM: ${color black} $memperc% $mem/$memmax \
 ${color white}SWAP: ${color black}$swapperc% $swap/$swapmax \
 ${color white}ROOT: ${color black}${fs_free /}/${fs_size /} \
 ${color white}HOME: ${color black}${fs_free /home}/${fs_size /home} \
-${color white}NAS: ${color black}${fs_free /media/NAS}/${fs_size /media/NAS} \
+${color white}NAS: ${color black}${fs_free /media/Perso}/${fs_size /media/Perso} \
 ${color white}NET: \
 ${color white}Up: ${color black}${upspeed eth0} \
 ${color white}Down: ${color black}${downspeed eth0}${color}
