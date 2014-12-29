@@ -1,4 +1,4 @@
 Dotfiles
 ========
 
-Archlinux config files
+Archlinux user config files
