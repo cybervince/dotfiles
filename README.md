@@ -1,4 +1,4 @@
-archlinux
-=========
+Dotfiles
+========
 
 Archlinux config files
