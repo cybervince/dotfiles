@@ -30,11 +30,20 @@ case "$OSTYPE" in
   linux*)
     #antigen bundle systemd
     antigen bundle tmux
-    ZSH_TMUX_AUTOSTART=true
-    ZSH_TMUX_AUTOSTART_ONCE=true
-    ZSH_TMUX_AUTOCONNECT=true
     ;;
-esac
+esaci
+
+
+## Custom settings
+
+# VCS opts
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Tmux opts
+ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOSTART_ONCE=true
+ZSH_TMUX_AUTOCONNECT=true
+
 
 # Load the theme.
 antigen theme robbyrussell
