@@ -31,7 +31,7 @@ case "$OSTYPE" in
     #antigen bundle systemd
     antigen bundle tmux
     ;;
-esaci
+esac
 
 
 ## Custom settings
