@@ -1,116 +1,355 @@
-" random options "
-""""""""""""""""""
-set number	"line numbers on the left
-set nocompatible	"no vi compatibility
-set noexrc	"don't use ~/.exrc config
-set cursorline "highlight the current line
-set noerrorbells "no audio bell aka beeping
-set novisualbell "no visual bell aka blinking
-set incsearch "search while typing
-set hlsearch "highlight all search matches
+" Details on : https://github.com/sd65/MiniVim
+let MiniVimVersion = 1.1
+let UseCustomKeyBindings = 1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" indent options "
-""""""""""""""""""
-set autoindent	"set indenting
-set ts=8	"set tab space
-set sw=4	"set soft tab
-set noexpandtab	"do not expand a tab to spaces
-set shiftwidth=8	"set autoindent to one tab
-set colorcolumn=80	"vertical column for text width
-
-" more random options "
-"""""""""""""""""""""""
-set shell=/bin/zsh "shell to use
-set t_vb=	"disable all bells
-set undolevels=1000	"undo levels
-set foldmethod=marker "allow marking folds
-set gfn=Envy\ Code\ R\ for\ Powerline\ 10	"font for gvim
-set guicursor+=n-v-c:blinkon0 "cursor for gvim
-
-syntax on	"color syntax highlighting
-filetype plugin on	"load the filetype specific config
-
-" color options "
-"""""""""""""""""
-set t_Co=256
-colorscheme peachpuff
-
-" changes to colorscheme "
-""""""""""""""""""""""""""
-" Name foreground background extras
-hi ColorColumn ctermbg=234
-hi CursorLine ctermbg=234	cterm=none
-hi CursorLineNr ctermfg=255
-
-" latex plugin "
-""""""""""""""""
-filetype plugin indent on
-set grepprg=grep\ -nH\ $*
-let g:tex_flavor = "latex"
-set runtimepath=~/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,~/.vim/after
-
-" vi compatible options "
-"""""""""""""""""""""""""
-:function! CondRight ()
-: if col(".") > 1
-: call cursor(line("."), col(".") + 1)
-: endif
-:endfunction
-
-imap <up> <esc><up>:call CondRight()<CR>
-imap <down> <esc><down>:call CondRight()<CR>
-imap <left> <esc>
-imap <right> <esc>:call CondRight()<CR><right>
-imap <home> <esc><home>
-imap <end> <esc><end>
-imap <pageup> <esc><pageup>:call CondRight()<CR>
-imap <pagedown> <esc><pagedown>:call CondRight()<CR>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" General options
+start " Start in Insertion mode
+syntax enable " Enable syntax highlights
+set ttyfast " Faster refraw
+set mouse=nv " Mouse activated in Normal and Visual Mode
+set shortmess+=I " No intro when starting Vim
+set smartindent " Smart... indent
+set expandtab " Insert spaces instead of tabs
+set softtabstop=2 " ... and insert two spaces
+set shiftwidth=2 " Indent with two spaces
+set incsearch " Search as typing
+set hlsearch " Highlight search results
+set cursorline " Highligt the cursor line
+set showmatch " When a bracket is inserted, briefly jump to the matching one
+set matchtime=3 " ... during this time
+set virtualedit=onemore " Allow the cursor to move just past the end of the line
+set history=100 " Keep 100 undo
+set wildmenu " Better command-line completion
+set scrolloff=10 " Always keep 10 lines after or before when scrolling
+set sidescrolloff=5 " Always keep 5 lines after or before when side scrolling
+set noshowmode " Don't display the current mode
+set gdefault " The substitute flag g is on
+set hidden " Hide the buffer instead of closing when switching
+set backspace=indent,eol,start " The normal behaviour of backspace
+set showtabline=2 " Always show tabs
+set laststatus=2 " Always show status bar
+set number " Show the line number
+set updatetime=1000
+set ignorecase " Search insensitive
+set smartcase " ... but smart
+let &showbreak="\u21aa " " Show a left arrow when wrapping text
+set encoding=utf-8  " The encoding displayed.
+set fileencoding=utf-8  " The encoding written to file.
+set synmaxcol=300 " Don't try to highlight long lines
+set guioptions-=T " Don't show toolbar in Gvim
+" Open all cmd args in new tabs
+execute ":silent :tab all" 
 
 
-" tabs "
-""""""""
-" :map <C><left> :tabprevious
-" :map <C-right> :tabnext
-" :map <C-tab> :tabnext
-" :map <C-n> :tabnew
+""" Prevent lag when hitting escape
+set ttimeoutlen=0
+set timeoutlen=1000 
+au InsertEnter * set timeout
+au InsertLeave * set notimeout
 
-" save folds "
-""""""""""""""
-"au BufWinLeave * silent mkview
-"au BufWinEnter * silent loadview
+""" Reopen at last position
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+""" Custom backup and swap files
+let myVimDir = expand("$HOME/.vim")
+let myBackupDir = myVimDir . '/backup'
+let mySwapDir = myVimDir . '/swap'
+function! EnsureDirExists (dir)
+  if !isdirectory(a:dir)
+    call mkdir(a:dir,'p')
+  endif
+endfunction
+call EnsureDirExists(myVimDir)
+call EnsureDirExists(myBackupDir)
+call EnsureDirExists(mySwapDir)
+set backup
+set backupskip=/tmp/*
+set backupext=.bak
+let &directory = mySwapDir
+let &backupdir = myBackupDir
+set writebackup
 
 
-" Make vim recognize Y86 assembly files "
-"""""""""""""""""""""""""""""""""""""""""
-:autocmd BufNewFile,BufRead *.ys set ft=asm
-:autocmd BufNewFile,BufRead *.ys set nosmartindent
+""" Key mappings
 
-" vim powerline "
-"""""""""""""""""
-set laststatus=2
-let g:airline_powerline_fonts = 1
-set t_Co=256
-"let g:Powerline_symbols = 'fancy'
+if UseCustomKeyBindings
 
-" gvim only "
-"""""""""""""
-"if has("gui_running")
-" set background=light
-"endif
+" Helper functions
+function! CreateShortcut(keys, cmd, where, ...)
+  let keys = "<" . a:keys . ">"
+  if a:where =~ "i"
+    let i = (index(a:000,"noTrailingIInInsert") > -1) ? "" : "i"
+    let e = (index(a:000,"noLeadingEscInInsert") > -1) ? "" : "<esc>"
+    execute "imap " . keys . " " . e .  a:cmd . i
+  endif
+  if a:where =~ "n"
+    execute "nmap " . keys . " " . a:cmd
+  endif    
+  if a:where =~ "v"
+    let k = (index(a:000,"restoreSelectionAfter") > -1) ? "gv" : ""
+    let c = a:cmd
+    if index(a:000,"cmdInVisual") > -1
+      let c = ":<C-u>" . strpart(a:cmd,1)
+    endif
+    execute "vmap " . keys . " " . c . k
+  endif
+endfunction
+function! TabIsEmpty()
+    return winnr('$') == 1 && len(expand('%')) == 0 && line2byte(line('$') + 1) <= 2
+endfunction
+function! MyQuit()
+  if TabIsEmpty() == 1
+    q!
+  else
+    if &modified
+      if (confirm("YOU HAVE UNSAVED CHANGES! Wanna quit anyway?", "&Yes\n&No", 2)==1)
+        q!
+      endif
+    else
+      q
+    endif
+  endif
+endfunction
+function! OpenLastBufferInNewTab()
+    redir => ls_output
+    silent exec 'ls'
+    redir END
+    let ListBuffers = reverse(split(ls_output, "\n"))
+    for line in ListBuffers
+      let title = split(line, "\"")[1]
+      if title !~  "\[No Name"
+        execute "tabnew +" . split(line, " ")[0] . "buf" 
+        break
+      endif       
+    endfor  
+endfunction
+function! ToggleColorColumn()
+    if &colorcolumn != 0
+        windo let &colorcolumn = 0
+    else
+        windo let &colorcolumn = 80
+    endif
+endfunction
+function! MyPasteToggle()
+  set invpaste
+  echo "Paste" (&paste) ? "On" : "Off"
+endfunction
+function! OpenNetrw()
+  if TabIsEmpty() == 1
+    Explore
+  else
+    Texplore
+  endif
+endfunction
 
-" TTY only "
-""""""""""""
-if &term=~"linux"
-" set laststatus=0
-colorscheme anotherdark
-hi ColorColumn ctermbg=234
-hi CursorLine ctermbg=234	cterm=none
-hi CursorLineNr ctermfg=255
-endif
+function! MenuNetrw()
+  let c = input("What to you want to do? (M)ake a dir, Make a (F)ile, (R)ename, (D)elete : ")
+  if (c == "m" || c == "M")
+    normal d
+  elseif (c == "f" || c == "F")
+    normal %
+  elseif (c == "r" || c == "R")
+    normal R
+  elseif (c == "d" || c == "D")
+    normal D
+  endif
+endfunction
 
-" vimpager only "
-"""""""""""""""""
-if exists("vimpager")
-set colorcolumn=0	"vertical column for text width
-set nocursorline
-endif
+" Usefull shortcuts to enter insert mode
+nnoremap <Enter> i<Enter>
+nnoremap <Backspace> i<Backspace>
+nnoremap <Space> i<Space>
+
+" Ctrl A - Begin Line
+call CreateShortcut("C-a", "0", "inv")
+
+" Ctrl E - End Line
+call CreateShortcut("C-e", "$<right>", "inv")
+
+" Ctrl S - Save
+call CreateShortcut("C-s", ":w<enter>", "nv", "cmdInVisual", "restoreSelectionAfter")
+call CreateShortcut("C-s", ":w<enter>i<right>", "i", "noTrailingIInInsert")
+
+" Home - Go To Begin
+call CreateShortcut("Home", "gg", "inv")
+
+" End - Go To End
+call CreateShortcut("End", "G", "inv")
+
+" Ctrl K - Delete Line
+call CreateShortcut("C-k", "dd", "in")
+call CreateShortcut("C-k", "d", "v")
+
+" Ctrl Q - Duplicate Line
+call CreateShortcut("C-q", "mjyyp`jjl", "i")
+call CreateShortcut("C-q", "mjyyp`jj", "n")
+call CreateShortcut("C-q", "yP", "v")
+
+" Ctrl Down - Pagedown
+call CreateShortcut("C-Down", "20j", "inv")
+
+" Ctrl Up - Pageup
+call CreateShortcut("C-Up", "20k", "inv")
+
+" Ctrl Right - Next Word
+call CreateShortcut("C-Right", "w", "nv")
+
+" Ctrl Left - Previous Word
+call CreateShortcut("C-Left", "b", "nv")
+
+" Ctrl F - Find
+call CreateShortcut("C-f", ":/", "in", "noTrailingIInInsert")
+
+" Ctrl H - Search and Replace
+call CreateShortcut("C-h", ":%s/", "in", "noTrailingIInInsert")
+
+" Ctrl L - Delete all lines
+call CreateShortcut("C-l", "ggdG", "in")
+
+" Pageup - Move up Line
+call CreateShortcut("PageUp", ":m-2<enter>", "in")
+call CreateShortcut("PageUp", "dkP", "v")
+
+" Pagedown - Move down Line
+call CreateShortcut("PageDown", ":m+<enter>", "in")
+call CreateShortcut("PageDown", "dp", "v")
+
+" Ctrl C - Quit
+call CreateShortcut("C-c", ":call MyQuit()<enter>", "inv", "cmdInVisual")
+
+" Tab - Indent
+call CreateShortcut("Tab", ">>", "n")
+call CreateShortcut("Tab", ">", "v", "restoreSelectionAfter")
+
+" Shift Tab - UnIndent
+call CreateShortcut("S-Tab", "<<", "in")
+call CreateShortcut("S-Tab", "<", "v", "restoreSelectionAfter")
+
+" Ctrl Z - Undo
+call CreateShortcut("C-z", "u", "in")
+
+" Ctrl R - Redo
+
+call CreateShortcut("C-r", "<C-r>", "in")
+" Ctrl D - Suppr (the key)
+call CreateShortcut("C-d", "<del>", "iv", "noLeadingEscInInsert", "noTrailingIInInsert")
+call CreateShortcut("C-d", "x", "n")
+
+" Ctrl T - New tab
+call CreateShortcut("C-t", ":tabnew<enter>i", "inv", "noTrailingIInInsert", "cmdInVisual")
+
+
+" Alt Right - Next tab
+call CreateShortcut("A-Right", "gt", "inv")
+
+" Alt Left - Previous tab
+call CreateShortcut("A-Left", "gT", "inv")
+
+" F2 - Paste toggle
+call CreateShortcut("f2",":call MyPasteToggle()<Enter>", "n")
+
+" F3 - Line numbers toggle
+call CreateShortcut("f3",":set nonumber!<Enter>", "in")
+
+" F4 - Panic Button
+call CreateShortcut("f4","mzggg?G`z", "inv")
+
+" F6 - Toggle color column at 80th char
+call CreateShortcut("f6",":call ToggleColorColumn()<Enter>", "inv")
+
+" Ctrl O - Netrw (:Explore)
+call CreateShortcut("C-o",":call OpenNetrw()<Enter>", "inv", "noTrailingIInInsert", "cmdInVisual")
+let g:netrw_banner=0 " Hide banner
+let g:netrw_list_hide='\(^\|\s\s\)\zs\.\S\+' " Hide hidden files
+autocmd filetype netrw call KeysInNetrw()
+function! KeysInNetrw()
+  " Right to enter
+  nmap <buffer> <Right> <Enter>
+  " Left to go up
+  nmap <buffer> <Left> -
+  " l - Display info
+  nmap <buffer> l qf
+  " n - Menu
+  nmap <buffer> n :call MenuNetrw()<Enter>
+endfunction
+
+endif " End custom key bindings
+
+""" Custom commands
+
+" :W - To write with root rights
+command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+" :UndoCloseTab - To undo close tab
+command UndoCloseTab call OpenLastBufferInNewTab()
+
+""" Colors and Statusline
+
+let defaultAccentColor=161
+let colorsAndModes= {
+  \ 'i' : 39,
+  \ 'v' : 82,
+  \ 'V' : 226,
+  \ '' : 208,
+\}
+let defaultAccentColorGui='#d7005f'
+let colorsAndModesGui= {
+  \ 'i' : '#00afff',
+  \ 'v' : '#5fff00',
+  \ 'V' : '#ffff00',
+  \ '' : '#ff8700',
+\}
+function! ChangeAccentColor()
+  let accentColor=get(g:colorsAndModes, mode(), g:defaultAccentColor)
+  let accentColorGui=get(g:colorsAndModesGui, mode(), g:defaultAccentColorGui)
+  execute 'hi User1 ctermfg=0 guifg=#000000 ctermbg=' . accentColor . ' guibg=' . accentColorGui
+  execute 'hi User2 ctermbg=0 guibg=#2e3436 ctermfg=' . accentColor . ' guifg=' . accentColorGui
+  execute 'hi User3 ctermfg=0 guifg=#000000 cterm=bold gui=bold ctermbg=' . accentColor . ' guibg=' . accentColorGui
+  execute 'hi TabLineSel ctermfg=0 cterm=bold ctermbg=' . accentColor
+  execute 'hi TabLine ctermbg=0 ctermfg=' . accentColor
+  execute 'hi CursorLineNr ctermfg=' . accentColor . ' guifg=' . accentColorGui
+  return ''
+endfunction
+function! ReadOnly()
+  return (&readonly || !&modifiable) ? 'Read Only ' : ''
+endfunction
+function! Modified()
+  return (&modified) ? 'Modified' : 'Not modified'
+endfunction
+let g:currentmode={
+    \ 'n'  : 'Normal',
+    \ 'no' : 'N·Operator Pending',
+    \ 'v'  : 'Visual',
+    \ 'V'  : 'V·Line',
+    \ '' : 'V·Block',
+    \ 's'  : 'Select',
+    \ 'S'  : 'S·Line',
+    \ '^S' : 'S·Block',
+    \ 'i'  : 'Insert',
+    \ 'R'  : 'Replace',
+    \ 'Rv' : 'VReplace',
+    \ 'c'  : 'Command',
+    \ 'cv' : 'Vim Ex',
+    \ 'ce' : 'Ex',
+    \ 'r'  : 'Prompt',
+    \ 'rm' : 'More',
+    \ 'r?' : 'Confirm',
+    \ '!'  : 'Shell',
+    \ 't'  : 'Terminal',
+\}
+set statusline=
+set statusline+=%{ChangeAccentColor()}
+set statusline+=%1*\ ***%{toupper(g:currentmode[mode()])}***\  " Current mode
+set statusline+=%2*\ %<%F\  " Filepath
+set statusline+=%2*\ %= " To the right
+set statusline+=%2*\ %{toupper((&fenc!=''?&fenc:&enc))}\[%{&ff}] " Encoding & Fileformat
+set statusline+=%2*\ %{Modified()}\ %{ReadOnly()} " Flags
+set statusline+=%1*\ \%l/%L-%c\  " Position
+" Speed up the redraw
+au InsertLeave * call ChangeAccentColor()
+au CursorHold * let &ro = &ro
+
+" Theme
+colorscheme koehler
