@@ -46,7 +46,7 @@ ZSH_TMUX_AUTOCONNECT=true
 
 
 # Load the theme.
-antigen theme robbyrussell
+antigen theme pygmalion
 
 # Tell antigen that you're done.
 antigen apply
