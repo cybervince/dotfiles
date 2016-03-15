@@ -6,6 +6,22 @@ source /opt/antigen/antigen.zsh
 # Load the oh-my-zsh's library.
 antigen use oh-my-zsh
 
+
+## Custom settings
+
+# VCS opts
+DISABLE_UNTRACKED_FILES_DIRTY=true
+
+# Tmux opts
+ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOSTART_ONCE=true
+ZSH_TMUX_AUTOCONNECT=true
+
+# Autosuggestion opts
+bindkey '^ ' autosuggest-accept
+bindkey '^\n' autosuggest-execute
+
+
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
 # Common
 antigen bundle common-aliases
@@ -32,17 +48,6 @@ case "$OSTYPE" in
     antigen bundle tmux
     ;;
 esac
-
-
-## Custom settings
-
-# VCS opts
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Tmux opts
-ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_AUTOSTART_ONCE=true
-ZSH_TMUX_AUTOCONNECT=true
 
 
 # Load the theme.
